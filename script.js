@@ -143,23 +143,59 @@
 
 // console.log(hasPath(edges, 'j', 'm')); 
 
-const connectedComponentsCount = (graph) => {
-  let count = 0
-  let visited = new Set()
-  for(let neighbor in graph){
-    if(traverseGraph(graph, neighbor, visited)){
-      count += 1
-    }
-  }
-  return count
-};
-const traverseGraph = (graph, node, visited) => {
-  if(visited.has(String(node))) return false
-  visited.add(String(node))
+// const connectedComponentsCount = (graph) => {
+//   let count = 0
+//   let visited = new Set()
+//   for(let neighbor in graph){
+//     if(traverseGraph(graph, neighbor, visited)){
+//       count += 1
+//     }
+//   }
+//   return count
+// };
+// const traverseGraph = (graph, node, visited) => {
+//   if(visited.has(String(node))) return false
+//   visited.add(String(node))
   
-  for(let neighbor of graph[node]){
-    traverseGraph(graph, neighbor, visited)
+//   for(let neighbor of graph[node]){
+//     traverseGraph(graph, neighbor, visited)
+//   }
+//   return true 
+// }
+
+const largestComponent = (graph) => {
+  let visited = new Set()
+  let largest = 0
+  for (let node in graph){
+    let size = exploreSize(graph, node, visited)
+    if(size > largest) largest = size
+    
   }
-  return true 
+  return largest
+};
+
+const exploreSize = (graph, node, visited) => {
+  if(visited.has(node)) return false
+  
+  visited.add(node)
+  console.log(visited)
+  let size = 1
+  for (let neighbor of graph[node]){
+    size += exploreSize(graph, neighbor, visited)
+    
+  }
+  return size
 }
+
+
+
+largestComponent({
+  1: ['2'],
+  2: ['1','8'],
+  6: ['7'],
+  9: ['8'],
+  7: ['6', '8'],
+  8: ['9', '7', '2']
+});
+
 
