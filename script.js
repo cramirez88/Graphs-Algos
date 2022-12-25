@@ -163,68 +163,111 @@
 //   return true 
 // }
 
-const largestComponent = (graph) => {
-  let visited = new Set()
-  let largest = 0
-  for (let node in graph){
-    let size = exploreSize(graph, node, visited)
-    if(size > largest) largest = size
+// const largestComponent = (graph) => {
+//   let visited = new Set()
+//   let largest = 0
+//   for (let node in graph){
+//     let size = exploreSize(graph, node, visited)
+//     if(size > largest) largest = size
     
-  }
-  return largest
-};
+//   }
+//   return largest
+// };
 
-const exploreSize = (graph, node, visited) => {
-  if(visited.has(node)) return false
+// const exploreSize = (graph, node, visited) => {
+//   if(visited.has(node)) return false
   
-  visited.add(node)
-  console.log(visited)
-  let size = 1
-  for (let neighbor of graph[node]){
-    size += exploreSize(graph, neighbor, visited)
+//   visited.add(node)
+//   console.log(visited)
+//   let size = 1
+//   for (let neighbor of graph[node]){
+//     size += exploreSize(graph, neighbor, visited)
     
+//   }
+//   return size
+// }
+
+
+
+// largestComponent({
+//   1: ['2'],
+//   2: ['1','8'],
+//   6: ['7'],
+//   9: ['8'],
+//   7: ['6', '8'],
+//   8: ['9', '7', '2']
+// });
+
+
+// const shortestPath = (edges, nodeA, nodeB) => {
+//   const graphDS = convertEdgesToGraph(edges)
+//    let visited = new Set([nodeA])
+//   const queue = [[nodeA, 0]]
+  
+//   while(queue.length > 0){
+//     const [node, distance] = queue.shift()
+//     if(node === nodeB) return distance
+//     for(let neighbor of graph[node]){
+//       if(!visited.has(neighbor)){
+//       visited.add(neighbor)
+//       queue.push([neighbor, distance + 1])
+//       }
+//     }
+//   }
+//   return -1
+// };
+
+// const graph = {}
+// convertEdgesToGraph = (edges) => {
+//   for(let edge of edges){
+//     const [a,b] = edge
+//     if(!(a in graph)) graph[a] = []
+//     if(!(b in graph)) graph[b] = []
+//     graph[a].push(b)
+//     graph[b].push(a)
+//   }
+//  return graph
+// }
+
+const grid = [
+  ['W', 'L', 'W', 'W', 'W'],
+  ['W', 'L', 'W', 'W', 'W'],
+  ['W', 'W', 'W', 'L', 'W'],
+  ['W', 'W', 'L', 'L', 'W'],
+  ['L', 'W', 'W', 'L', 'L'],
+  ['L', 'L', 'W', 'W', 'W'],
+];
+
+const visited = new Set()
+let count = 0
+
+for (let i = 0; i < grid.length; i++){
+  console.log(i)
+  for(let c = 0; c < grid[0].length; c++){
+    if(explore(grid, i, c, visited)){
+      count ++
+    }
   }
-  return size
+return count
 }
 
 
+const explore = (grid, i, c, visited) => {
+  const rowInbound = 0 <= i && i < grid.length;
+  const colInbound = 0 <= c && c < grid.length;
 
-largestComponent({
-  1: ['2'],
-  2: ['1','8'],
-  6: ['7'],
-  9: ['8'],
-  7: ['6', '8'],
-  8: ['9', '7', '2']
-});
+  if(!(rowInbound || colInbound)) return false
+  if(grid[i][r] === 'W') return false
 
+  const position = r + ',' + c;
 
-const shortestPath = (edges, nodeA, nodeB) => {
-  const graphDS = convertEdgesToGraph(edges)
-   let visited = new Set([nodeA])
-  const queue = [[nodeA, 0]]
-  
-  while(queue.length > 0){
-    const [node, distance] = queue.shift()
-    if(node === nodeB) return distance
-    for(let neighbor of graph[node]){
-      if(!visited.has(neighbor)){
-      visited.add(neighbor)
-      queue.push([neighbor, distance + 1])
-      }
-    }
-  }
-  return -1
-};
+  if(visited.has(position)) return false
+  visited.add(position)
 
-const graph = {}
-convertEdgesToGraph = (edges) => {
-  for(let edge of edges){
-    const [a,b] = edge
-    if(!(a in graph)) graph[a] = []
-    if(!(b in graph)) graph[b] = []
-    graph[a].push(b)
-    graph[b].push(a)
-  }
- return graph
+  explore(grid, i + 1, c, visited)
+  explore(grid, i - 1, c, visited)
+  explore(grid, i, c + 1, visited)
+  explore(grid, i, c - 1, visited)
+
+  return true
 }
