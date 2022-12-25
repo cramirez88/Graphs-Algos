@@ -238,36 +238,77 @@ const grid = [
   ['L', 'L', 'W', 'W', 'W'],
 ];
 
-const visited = new Set()
-let count = 0
+// const visited = new Set()
+// let count = 0
 
-for (let i = 0; i < grid.length; i++){
-  console.log(i)
-  for(let c = 0; c < grid[0].length; c++){
-    if(explore(grid, i, c, visited)){
-      count ++
-    }
-  }
-return count
-}
+// for (let i = 0; i < grid.length; i++){
+//   console.log(i)
+//   for(let c = 0; c < grid[0].length; c++){
+//     if(explore(grid, i, c, visited)){
+//       count ++
+//     }
+//   }
+// return count
+// }
 
 
-const explore = (grid, i, c, visited) => {
-  const rowInbound = 0 <= i && i < grid.length;
-  const colInbound = 0 <= c && c < grid.length;
+// const explore = (grid, i, c, visited) => {
+//   const rowInbound = 0 <= i && i < grid.length;
+//   const colInbound = 0 <= c && c < grid.length;
 
-  if(!(rowInbound || colInbound)) return false
-  if(grid[i][r] === 'W') return false
+//   if(!(rowInbound || colInbound)) return false
+//   if(grid[i][r] === 'W') return false
 
-  const position = r + ',' + c;
+//   const position = r + ',' + c;
 
+//   if(visited.has(position)) return false
+//   visited.add(position)
+
+//   explore(grid, i + 1, c, visited)
+//   explore(grid, i - 1, c, visited)
+//   explore(grid, i, c + 1, visited)
+//   explore(grid, i, c - 1, visited)
+
+//   return true
+// }
+
+
+// const minimumIsland = (grid) => {
+//   let visited = new Set()
+//   let minSize = Infinity
+//   for(let row = 0; row < grid.length; row++){
+//     for(let col = 0; col < grid[0].length; col++){
+//       let size = explore(grid, row, col, visited )
+//       if(size < minSize && size > 0){
+//         minSize = size
+//       }
+//     }
+//   }
+  
+//   return minSize
+// };
+
+
+const explore = (grid, row, col, visited) => {
+  const rowInbound = 0 <= row && row < grid.length
+  const colInbound = 0 <= col && col < grid[0].length
+  
+  if(!rowInbound || !colInbound) return false
+  if(grid[row][col] === 'W') return false
+  
+  const position = row + ',' + col
+  
   if(visited.has(position)) return false
   visited.add(position)
-
-  explore(grid, i + 1, c, visited)
-  explore(grid, i - 1, c, visited)
-  explore(grid, i, c + 1, visited)
-  explore(grid, i, c - 1, visited)
-
-  return true
+  
+  let size = 1
+  size += explore(grid, row - 1, col, visited)
+  size += explore(grid, row + 1, col, visited)
+  size += explore(grid, row, col - 1, visited)
+  size += explore(grid, row, col + 1, visited)
+  
+  return size
 }
+
+
+
