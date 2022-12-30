@@ -312,36 +312,83 @@ const grid = [
 
 
 
-const shortestPath = (edges, nodeA, nodeB) => {
-  const buildGraph = edgeToGraph(edges)
-  const queue = [[nodeA, 0]]
-  let visited = new Set([nodeA])
+// const shortestPath = (edges, nodeA, nodeB) => {
+//   const buildGraph = edgeToGraph(edges)
+//   const queue = [[nodeA, 0]]
+//   let visited = new Set([nodeA])
   
-  while(queue.length > 0){
-    const [node, distance] = queue.shift()
-    if(node === nodeB) return distance
-    for(let neighbor of buildGraph[node]){
-      console.log(neighbor)
-      if(!visited.has(neighbor)){
-        visited.add(neighbor)
-        queue.push([neighbor, distance + 1])
-      }
+//   while(queue.length > 0){
+//     const [node, distance] = queue.shift()
+//     if(node === nodeB) return distance
+//     for(let neighbor of buildGraph[node]){
+//       console.log(neighbor)
+//       if(!visited.has(neighbor)){
+//         visited.add(neighbor)
+//         queue.push([neighbor, distance + 1])
+//       }
       
-    }
-  }
-  return -1
-};
+//     }
+//   }
+//   return -1
+// };
 
 
-const edgeToGraph = (edges) => {
-  const graph = {}
-  for (let edge of edges){
-    const [a, b] = edge
-    if(!(a in graph)) graph[a] = []
-    if(!(b in graph)) graph[b] = []
+// const edgeToGraph = (edges) => {
+//   const graph = {}
+//   for (let edge of edges){
+//     const [a, b] = edge
+//     if(!(a in graph)) graph[a] = []
+//     if(!(b in graph)) graph[b] = []
     
-    graph[a].push(b)
-    graph[b].push(a)
+//     graph[a].push(b)
+//     graph[b].push(a)
+//   }
+//   return graph
+// }
+
+
+// const islandCount = (grid) => {
+//   let visited = new Set()
+//   let count = 0
+//   for(let row = 0; row < grid.length; row++){
+//     for(let column = 0; column < grid[0].length; column++){
+//       if(exploreIsland(grid, row, column, visited)){
+//         count += 1
+//       }
+//     }
+//   }
+//   return count
+// };
+
+const grid = [
+  ['W', 'L', 'W', 'W', 'W'],
+  ['W', 'L', 'W', 'W', 'W'],
+  ['W', 'W', 'W', 'L', 'W'],
+  ['W', 'W', 'L', 'L', 'W'],
+  ['L', 'W', 'W', 'L', 'L'],
+  ['L', 'L', 'W', 'W', 'W'],
+];
+  
+  const exploreIsland = (grid, row, column, visited) => {
+    const rowInbound = 0 <= row && row < grid.length;
+    const columnInbound = 0<= column && column < grid.length;
+    if(!rowInbound || !columnInbound) return false
+    if(grid[row][column] === 'W') return false
+    const position = row + ',' + column
+    if(visited.has(position)) return false
+    visited.add(position)
+    
+    exploreIsland(grid, row + 1, column, visited)
+    exploreIsland(grid, row - 1, column, visited)
+    exploreIsland(grid, row, column + 1, visited)
+    exploreIsland(grid, row, column - 1, visited)
+    return true
   }
-  return graph
-}
+
+
+
+
+islandCount(grid); // -> 3
+module.exports = {
+  islandCount,
+};
