@@ -289,26 +289,59 @@ const grid = [
 // };
 
 
-const explore = (grid, row, col, visited) => {
-  const rowInbound = 0 <= row && row < grid.length
-  const colInbound = 0 <= col && col < grid[0].length
+// const explore = (grid, row, col, visited) => {
+//   const rowInbound = 0 <= row && row < grid.length
+//   const colInbound = 0 <= col && col < grid[0].length
   
-  if(!rowInbound || !colInbound) return false
-  if(grid[row][col] === 'W') return false
+//   if(!rowInbound || !colInbound) return false
+//   if(grid[row][col] === 'W') return false
   
-  const position = row + ',' + col
+//   const position = row + ',' + col
   
-  if(visited.has(position)) return false
-  visited.add(position)
+//   if(visited.has(position)) return false
+//   visited.add(position)
   
-  let size = 1
-  size += explore(grid, row - 1, col, visited)
-  size += explore(grid, row + 1, col, visited)
-  size += explore(grid, row, col - 1, visited)
-  size += explore(grid, row, col + 1, visited)
+//   let size = 1
+//   size += explore(grid, row - 1, col, visited)
+//   size += explore(grid, row + 1, col, visited)
+//   size += explore(grid, row, col - 1, visited)
+//   size += explore(grid, row, col + 1, visited)
   
-  return size
+//   return size
+// }
+
+
+
+const shortestPath = (edges, nodeA, nodeB) => {
+  const buildGraph = edgeToGraph(edges)
+  const queue = [[nodeA, 0]]
+  let visited = new Set([nodeA])
+  
+  while(queue.length > 0){
+    const [node, distance] = queue.shift()
+    if(node === nodeB) return distance
+    for(let neighbor of buildGraph[node]){
+      console.log(neighbor)
+      if(!visited.has(neighbor)){
+        visited.add(neighbor)
+        queue.push([neighbor, distance + 1])
+      }
+      
+    }
+  }
+  return -1
+};
+
+
+const edgeToGraph = (edges) => {
+  const graph = {}
+  for (let edge of edges){
+    const [a, b] = edge
+    if(!(a in graph)) graph[a] = []
+    if(!(b in graph)) graph[b] = []
+    
+    graph[a].push(b)
+    graph[b].push(a)
+  }
+  return graph
 }
-
-
-
