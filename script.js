@@ -360,35 +360,68 @@ const grid = [
 //   return count
 // };
 
-const grid = [
-  ['W', 'L', 'W', 'W', 'W'],
-  ['W', 'L', 'W', 'W', 'W'],
-  ['W', 'W', 'W', 'L', 'W'],
-  ['W', 'W', 'L', 'L', 'W'],
-  ['L', 'W', 'W', 'L', 'L'],
-  ['L', 'L', 'W', 'W', 'W'],
-];
+// const grid = [
+//   ['W', 'L', 'W', 'W', 'W'],
+//   ['W', 'L', 'W', 'W', 'W'],
+//   ['W', 'W', 'W', 'L', 'W'],
+//   ['W', 'W', 'L', 'L', 'W'],
+//   ['L', 'W', 'W', 'L', 'L'],
+//   ['L', 'L', 'W', 'W', 'W'],
+// ];
   
-  const exploreIsland = (grid, row, column, visited) => {
-    const rowInbound = 0 <= row && row < grid.length;
-    const columnInbound = 0<= column && column < grid.length;
-    if(!rowInbound || !columnInbound) return false
-    if(grid[row][column] === 'W') return false
-    const position = row + ',' + column
-    if(visited.has(position)) return false
-    visited.add(position)
+//   const exploreIsland = (grid, row, column, visited) => {
+//     const rowInbound = 0 <= row && row < grid.length;
+//     const columnInbound = 0<= column && column < grid.length;
+//     if(!rowInbound || !columnInbound) return false
+//     if(grid[row][column] === 'W') return false
+//     const position = row + ',' + column
+//     if(visited.has(position)) return false
+//     visited.add(position)
     
-    exploreIsland(grid, row + 1, column, visited)
-    exploreIsland(grid, row - 1, column, visited)
-    exploreIsland(grid, row, column + 1, visited)
-    exploreIsland(grid, row, column - 1, visited)
-    return true
+//     exploreIsland(grid, row + 1, column, visited)
+//     exploreIsland(grid, row - 1, column, visited)
+//     exploreIsland(grid, row, column + 1, visited)
+//     exploreIsland(grid, row, column - 1, visited)
+//     return true
+//   }
+
+
+
+
+// islandCount(grid); // -> 3
+// module.exports = {
+//   islandCount,
+// };
+
+
+const minimumIsland = (grid) => {
+  let visited = new Set()
+  let smallestIsland = Infinity
+  for(let row = 0; row < grid.length; row++){
+    for(let column = 0; column < grid[0].length; column++){
+      let size = exploreIsland(grid, row, column, visited)
+      if(size < smallestIsland && size > 0){
+        smallestIsland = size
+      }
+    }
   }
+ 
+  return smallestIsland
+}
 
-
-
-
-islandCount(grid); // -> 3
-module.exports = {
-  islandCount,
-};
+const exploreIsland = (grid, row, column, visited) => {
+  const rowInbound = 0 <= row && row < grid.length;
+  const columnInbound = 0 <= column && column < grid[0].length;
+  if(!rowInbound || !columnInbound) return false
+  if(grid[row][column] === 'W') return false
+  
+  const position = row + ',' + column
+  if(visited.has(position)) return false
+  visited.add(position)
+  let size = 1
+  size += exploreIsland(grid, row + 1, column, visited)
+  size += exploreIsland(grid, row - 1, column, visited)
+  size += exploreIsland(grid, row, column + 1, visited)
+  size += exploreIsland(grid, row, column - 1, visited)
+  return size
+}
