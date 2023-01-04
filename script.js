@@ -394,34 +394,62 @@ const grid = [
 // };
 
 
-const minimumIsland = (grid) => {
-  let visited = new Set()
-  let smallestIsland = Infinity
-  for(let row = 0; row < grid.length; row++){
-    for(let column = 0; column < grid[0].length; column++){
-      let size = exploreIsland(grid, row, column, visited)
-      if(size < smallestIsland && size > 0){
-        smallestIsland = size
+// const minimumIsland = (grid) => {
+//   let visited = new Set()
+//   let smallestIsland = Infinity
+//   for(let row = 0; row < grid.length; row++){
+//     for(let column = 0; column < grid[0].length; column++){
+//       let size = exploreIsland(grid, row, column, visited)
+//       if(size < smallestIsland && size > 0){
+//         smallestIsland = size
+//       }
+//     }
+//   }
+ 
+//   return smallestIsland
+// }
+
+// const exploreIsland = (grid, row, column, visited) => {
+//   const rowInbound = 0 <= row && row < grid.length;
+//   const columnInbound = 0 <= column && column < grid[0].length;
+//   if(!rowInbound || !columnInbound) return false
+//   if(grid[row][column] === 'W') return false
+  
+//   const position = row + ',' + column
+//   if(visited.has(position)) return false
+//   visited.add(position)
+//   let size = 1
+//   size += exploreIsland(grid, row + 1, column, visited)
+//   size += exploreIsland(grid, row - 1, column, visited)
+//   size += exploreIsland(grid, row, column + 1, visited)
+//   size += exploreIsland(grid, row, column - 1, visited)
+//   return size
+// }
+
+
+const closestCarrot = (grid, startRow, startCol) => {
+  let queue = [[startRow, startCol, 0]]
+  let visited = new Set ([startRow, startCol])
+  while (queue.length > 0){
+    const [row, col, distance] = queue.shift()
+    console.log(row, col, distance)
+    if(grid[row][col] === 'C') return distance
+    const deltas = [[1,0], [-1,0], [0,1], [0,-1]]
+    for(let delta of deltas){
+      const [deltaRow, deltaCol] = delta
+      const rowNeighbor = deltaRow + row
+      const colNeighbor = deltaCol + col
+      const rowInbound = 0 <= rowNeighbor && rowNeighbor < grid.length;
+      const colInbound = 0 <= colNeighbor && colNeighbor < grid[0].length;
+      const pos = rowNeighbor + ',' + colNeighbor
+      if(rowInbound && colInbound && grid[rowNeighbor][colNeighbor] !== 'X' && !visited.has(pos)){
+        visited.add(pos)
+        queue.push([rowNeighbor, colNeighbor, distance + 1])
+        
       }
     }
   }
- 
-  return smallestIsland
-}
+  return -1
+};
 
-const exploreIsland = (grid, row, column, visited) => {
-  const rowInbound = 0 <= row && row < grid.length;
-  const columnInbound = 0 <= column && column < grid[0].length;
-  if(!rowInbound || !columnInbound) return false
-  if(grid[row][column] === 'W') return false
-  
-  const position = row + ',' + column
-  if(visited.has(position)) return false
-  visited.add(position)
-  let size = 1
-  size += exploreIsland(grid, row + 1, column, visited)
-  size += exploreIsland(grid, row - 1, column, visited)
-  size += exploreIsland(grid, row, column + 1, visited)
-  size += exploreIsland(grid, row, column - 1, visited)
-  return size
-}
+
