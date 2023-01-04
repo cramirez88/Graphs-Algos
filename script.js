@@ -427,29 +427,56 @@ const grid = [
 // }
 
 
-const closestCarrot = (grid, startRow, startCol) => {
-  let queue = [[startRow, startCol, 0]]
-  let visited = new Set ([startRow, startCol])
-  while (queue.length > 0){
-    const [row, col, distance] = queue.shift()
-    console.log(row, col, distance)
-    if(grid[row][col] === 'C') return distance
-    const deltas = [[1,0], [-1,0], [0,1], [0,-1]]
-    for(let delta of deltas){
-      const [deltaRow, deltaCol] = delta
-      const rowNeighbor = deltaRow + row
-      const colNeighbor = deltaCol + col
-      const rowInbound = 0 <= rowNeighbor && rowNeighbor < grid.length;
-      const colInbound = 0 <= colNeighbor && colNeighbor < grid[0].length;
-      const pos = rowNeighbor + ',' + colNeighbor
-      if(rowInbound && colInbound && grid[rowNeighbor][colNeighbor] !== 'X' && !visited.has(pos)){
-        visited.add(pos)
-        queue.push([rowNeighbor, colNeighbor, distance + 1])
+// const closestCarrot = (grid, startRow, startCol) => {
+//   let queue = [[startRow, startCol, 0]]
+//   let visited = new Set ([startRow, startCol])
+//   while (queue.length > 0){
+//     const [row, col, distance] = queue.shift()
+//     console.log(row, col, distance)
+//     if(grid[row][col] === 'C') return distance
+//     const deltas = [[1,0], [-1,0], [0,1], [0,-1]]
+//     for(let delta of deltas){
+//       const [deltaRow, deltaCol] = delta
+//       const rowNeighbor = deltaRow + row
+//       const colNeighbor = deltaCol + col
+//       const rowInbound = 0 <= rowNeighbor && rowNeighbor < grid.length;
+//       const colInbound = 0 <= colNeighbor && colNeighbor < grid[0].length;
+//       const pos = rowNeighbor + ',' + colNeighbor
+//       if(rowInbound && colInbound && grid[rowNeighbor][colNeighbor] !== 'X' && !visited.has(pos)){
+//         visited.add(pos)
+//         queue.push([rowNeighbor, colNeighbor, distance + 1])
         
-      }
+//       }
+//     }
+//   }
+//   return -1
+// };
+
+
+const longestPath = (graph) => {
+  const distance ={}
+  for (let node in graph){
+    if(graph[node].length === 0){
+       distance[node] = 0
     }
   }
-  return -1
+  for(let node in graph){
+  traverseGraph(graph, node, distance)
+  
+}
+  return Math.max(...Object.values(distance))
 };
 
+
+
+const traverseGraph = (graph, node, distance) => {
+  if(node in distance) return distance[node]
+  let max = 0
+  for(let neighbor of graph[node]){
+    const attempt = traverseGraph(graph, neighbor, distance)
+    if(attempt > max) max = attempt
+  }
+  distance[node] = 1 + max
+  return distance[node]
+}
 
