@@ -453,30 +453,43 @@ const grid = [
 // };
 
 
-const longestPath = (graph) => {
-  const distance ={}
-  for (let node in graph){
-    if(graph[node].length === 0){
-       distance[node] = 0
-    }
-  }
-  for(let node in graph){
-  traverseGraph(graph, node, distance)
+// const longestPath = (graph) => {
+//   const distance ={}
+//   for (let node in graph){
+//     if(graph[node].length === 0){
+//        distance[node] = 0
+//     }
+//   }
+//   for(let node in graph){
+//   traverseGraph(graph, node, distance)
   
-}
-  return Math.max(...Object.values(distance))
-};
+// }
+//   return Math.max(...Object.values(distance))
+// };
 
 
 
-const traverseGraph = (graph, node, distance) => {
-  if(node in distance) return distance[node]
-  let max = 0
-  for(let neighbor of graph[node]){
-    const attempt = traverseGraph(graph, neighbor, distance)
-    if(attempt > max) max = attempt
+// const traverseGraph = (graph, node, distance) => {
+//   if(node in distance) return distance[node]
+//   let max = 0
+//   for(let neighbor of graph[node]){
+//     const attempt = traverseGraph(graph, neighbor, distance)
+//     if(attempt > max) max = attempt
+//   }
+//   distance[node] = 1 + max
+//   return distance[node]
+// }
+
+const pairedParentheses = (str) => {
+  let count = 0
+  for (let char of str){
+    if(char === '('){
+      count += 1
+    } else if(char === ')') {
+      if(count === 0) return false
+      count -= 1
+    }
+    
   }
-  distance[node] = 1 + max
-  return distance[node]
-}
-
+  return count === 0
+};
