@@ -480,16 +480,72 @@ const grid = [
 //   return distance[node]
 // }
 
-const pairedParentheses = (str) => {
-  let count = 0
-  for (let char of str){
-    if(char === '('){
-      count += 1
-    } else if(char === ')') {
-      if(count === 0) return false
-      count -= 1
-    }
+// const pairedParentheses = (str) => {
+//   let count = 0
+//   for (let char of str){
+//     if(char === '('){
+//       count += 1
+//     } else if(char === ')') {
+//       if(count === 0) return false
+//       count -= 1
+//     }
     
+//   }
+//   return count === 0
+// };
+
+const semestersRequired = (numCourses, prereqs) => {
+  const graph = convertToGraph(numCourses, prereqs)
+  const distance = {}
+  for (let node in graph){
+    if(graph[node].length === 0) distance[node] = 1
   }
-  return count === 0
+  
+  for (let node in graph){
+    traverseDistance(graph, node, distance)
+  }
+  return Math.max(...Object.values(distance))
+};
+
+const traverseDistance = (graph, node, distance) => {
+  if (node in distance) return distance[node]
+  let maxDist = 0
+  for (let neighbor of graph[node]){
+    const dist = traverseDistance(graph, neighbor, distance)
+    if(dist > maxDist) maxDist = dist
+  }
+  distance[node] = 1 + maxDist
+  return distance[node]
+}
+
+
+
+// const convertToGraph = (prereqs) => {
+//   const graph = {}
+//   for (let prereq of prereqs){
+//     const [a,b] = prereq
+//     if(!(a in graph)) graph[a] = []
+//     if(!(b in graph)) graph[b] = []
+    
+//     graph[a].push(b)
+//   }
+//   console.log(graph)
+// return graph
+// }
+
+const convertToGraph = (numCourses, prereqs) => {
+  const graph = {};
+  
+  for (let i = 0; i < numCourses; i += 1) {
+    graph[i] = [];
+  }
+  
+  for (let prereq of prereqs) {
+    const [a, b] = prereq;
+    if(!(a in graph)) graph[a] = []
+    if(!(b in graph)) graph[b] = []
+    graph[a].push(b);
+  }
+  
+  return graph;
 };
